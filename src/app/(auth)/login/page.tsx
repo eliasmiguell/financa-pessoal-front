@@ -1,19 +1,33 @@
 "use client";
 import AuthInput from '@/components/InputAuth';
 import Link from 'next/link';
-
-import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import React, { useContext, useState } from 'react';
+import { makeRequest } from '../../../../axios';
+import { useRouter } from 'next/navigation';
+import { UserContext } from '@/context/UserContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUser}= useContext(UserContext)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== email) {
-      alert('As senhas não coincidem!');
-      return;
-    }
+    
+    await makeRequest.post('authlogin', {email, password})
+     .then((res)=>{
+      localStorage.setItem("financa:user", JSON.stringify(res.data.user))
+      setUser(res.data)
+      router.push('/main')
+      return true;
+     }).catch((error)=>{
+      toast.error(error.response.data.message);
+      console.log(error);
+      return null;
+     })
         
   };
 

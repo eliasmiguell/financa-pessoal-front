@@ -1,16 +1,17 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '.*',  
+        hostname: '.*',
         port: '',
-        pathname: '/**',  
+        pathname: '/**',
       },
-    ]
-  }
+    ],
+  },
+  productionBrowserSourceMaps: false,  
 };
 
 export default nextConfig;
