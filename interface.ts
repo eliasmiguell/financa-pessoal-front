@@ -13,11 +13,15 @@ export interface IFROM{
 }
 
 export interface IUser {
-  id: number;
-  email: string;
-  username: string;
-  userimg: string;
-  bgimg: string;
+  user: {
+    id: number;
+    email: string;
+    username: string;
+    userimg: string;
+    bgimg: string;
+  } | undefined;
+
+  setUser: (newState: any) => void;
 }
 
 export interface ContextProps {

@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+// productionBrowserSourceMaps: false,
+// productionSourceMaps: false,
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -10,8 +12,14 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  }, 
+  webpack(config, { dev, isServer }) {
+    // Desabilita source maps em produção
+    if (!dev && !isServer) {
+      config.devtool = false;
+    }
+    return config;
   },
-  productionBrowserSourceMaps: false,  
 };
 
 export default nextConfig;

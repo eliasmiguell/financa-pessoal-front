@@ -17,7 +17,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await makeRequest.post("authregister", {username, email, password, confirmPassword})
+    await makeRequest.post("/authregister", {username, email, password, confirmPassword})
     .then((res)=>{
       setUsername(' ');
       setEmail(' ');

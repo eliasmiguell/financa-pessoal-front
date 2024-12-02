@@ -17,10 +17,10 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    await makeRequest.post('authlogin', {email, password})
+    await makeRequest.post('/authlogin', {email, password})
      .then((res)=>{
       localStorage.setItem("financa:user", JSON.stringify(res.data.user))
-      setUser(res.data)
+      setUser(res.data.user)
       router.push('/main')
       return true;
      }).catch((error)=>{
