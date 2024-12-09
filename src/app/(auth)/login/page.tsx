@@ -9,6 +9,7 @@ import { UserContext } from '@/context/UserContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
+  const [error, setError ] = useState('');
   const [password, setPassword] = useState('');
   const { setUser}= useContext(UserContext)
 
@@ -24,7 +25,7 @@ const LoginPage = () => {
       router.push('/main')
       return true;
      }).catch((error)=>{
-      toast.error(error.response.data.message);
+     setError(error.response.data.message)
       console.log(error);
       return null;
      })
@@ -41,6 +42,7 @@ const LoginPage = () => {
               <div>
                <AuthInput placeholder="Digite sua senha" label='Senha' newState={setPassword}  Ispassword/>
               </div>
+              {error && <span className="text-red-500 my-3">{error}</span>}
               <button
               onClick={(e)=>handleSubmit(e)}
                 type="submit"

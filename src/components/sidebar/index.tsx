@@ -1,7 +1,7 @@
 import {Sheet, SheetTrigger, SheetContent} from '@/components/ui/sheet';
 import { Button } from '../ui/button';
 import Link from 'next/link';
-import { Package, PanelBottom, Home, ShoppingBag, Users, Settings2, LogOut} from 'lucide-react';
+import { Package, PanelBottom, Settings2, LogOut, LayoutDashboard, BarChart, DollarSign, HelpCircle, HelpCircleIcon} from 'lucide-react';
 import {TooltipProvider, Tooltip, TooltipContent, TooltipTrigger} from '../ui/tooltip'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useContext, useEffect } from 'react';
@@ -71,12 +71,12 @@ export function Sidebar() {
               <TooltipTrigger asChild>
               
                 <Link href='/main' className='flex  h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
-                <div className='flex  items-center justify-center gap-2 ml-10'>
+                <div className='flex  items-center justify-center gap-2 ml-[60px]'>
                 <div className='flex shrink-0  justify-center items-center gap-2'>
-                <Home className=' h-4 w-4 '/>
-                <span className='sr-only'>Inicio</span>
+                <LayoutDashboard className=' h-4 w-4 '/>
+                <span className='sr-only'>Dashboard</span>
                 </div>
-                 <p>Inicio</p>
+                 <p>Dashboard</p>
                 </div>
                 </Link>
               </TooltipTrigger>
@@ -84,13 +84,13 @@ export function Sidebar() {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
-                <div className='flex  items-center justify-center gap-2 ml-10'>
+                <Link href={'/todasTrasacoes'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <div className='flex  items-center justify-center gap-2 ml-[60px]'>
                 <div className='flex shrink-0  justify-center items-center gap-2'>
-                <ShoppingBag className=' h-4 w-4 '/>
-                <span className='sr-only'>Pedidos</span>
+                <DollarSign className=' h-4 w-4 '/>
+                <span className='sr-only'>Minhas Transações</span>
                 </div>
-                <p>Inicio</p>
+                <p>Minhas Transações</p>
                 </div>
                 </Link>
               </TooltipTrigger>
@@ -101,24 +101,10 @@ export function Sidebar() {
                 <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
                 <div className='flex  items-center justify-center gap-2 ml-[60px]'>
                 <div className='flex shrink-0  justify-center items-center gap-2'>
-                <Package className=' h-4 w-4 '/>
-                <span className='sr-only'>Produtos</span>
+                <BarChart className=' h-4 w-4 '/>
+                <span className='sr-only'>Relatórios</span>
                 </div>
-                <span>Produtos</span>
-                </div>
-                </Link>
-              </TooltipTrigger>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
-                <div className='flex  items-center justify-center gap-2 ml-10'>
-                <div className='flex shrink-0  justify-center items-center gap-2'>
-                <Users className=' h-4 w-4 '/>
-                <span className='sr-only'>Clientes</span>
-                </div>
-                <span >Clientes</span>
+                <span>Relatórios</span>
                 </div>
                 </Link>
               </TooltipTrigger>
@@ -139,6 +125,20 @@ export function Sidebar() {
               {/* <TooltipContent side="right">
                   Clientes
               </TooltipContent> */}
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <div className='flex  items-center justify-center gap-2 ml-10'>
+                <div className='flex shrink-0  justify-center items-center gap-2'>
+                <HelpCircle className=' h-4 w-4 '/>
+                <span className='sr-only'>Ajuda</span>
+                </div>
+                <span >Ajuda</span>
+                </div>
+                </Link>
+              </TooltipTrigger>
             </Tooltip>
           </TooltipProvider>
           
@@ -172,10 +172,11 @@ export function Sidebar() {
         '>
           <Sheet >
               <SheetTrigger>
-                  <Button className='sm:hidden' size='icon' variant="outline" >
-                    <PanelBottom className='w-6 h-6'/>
-                    <span className='sr-only'>Abrir / fechar menu</span>
-                  </Button>
+                        <span className="sm:hidden">
+              <PanelBottom className="w-6 h-6" />
+              <span className="sr-only">Abrir / fechar menu</span>
+            </span>
+                  
               </SheetTrigger>
               <SheetContent side={'left'} className='sm:max-w-x'>
                 <nav className='grid gap-6 text-lg font-medium'>
@@ -192,30 +193,30 @@ export function Sidebar() {
                     </Link>
                     <p>{user?.username}</p>
                     </div>
-                    <Link href={''}  
+                    <Link href={'/main'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
-                    <Home className='h-5 w-5 transition-all'/>
-                    Inicio
+                    <LayoutDashboard className='h-5 w-5 transition-all'/>
+                    Dashboard
+                    </Link>
+                    <Link href={'/todasTrasacoes'}  
+                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
+                    < DollarSign className='h-5 w-5 transition-all'/>
+                    Minhas Transações
                     </Link>
                     <Link href={''}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
-                    < ShoppingBag className='h-5 w-5 transition-all'/>
-                    Pedidos
-                    </Link>
-                    <Link href={''}  
-                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
-                    <Package className='h-5 w-5 transition-all'/>
-                    Produtos
-                    </Link>
-                    <Link href={''}  
-                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
-                    <Users className='h-5 w-5 transition-all'/>
-                    Clientes
+                    <BarChart className='h-5 w-5 transition-all'/>
+                    Relatórios
                     </Link>
                     <Link href={''}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
                     <Settings2 className='h-5 w-5 transition-all'/>
                     Configurações
+                    </Link>
+                    <Link href={''}  
+                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
+                    <HelpCircleIcon className='h-5 w-5 transition-all'/>
+                    Ajuda
                     </Link>
 
                     <nav className='mt-auto flex-col'>
@@ -226,7 +227,7 @@ export function Sidebar() {
                     <LogOut className='h-5 w-5 transition-all' />
                     Sair
                     </Link>
-                </nav>
+                  </nav>
                 </nav>
                
                

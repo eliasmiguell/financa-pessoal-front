@@ -69,7 +69,7 @@ ChartContainer.displayName = "Chart"
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([, config]) => config.theme || config.color
+    ([_, config]) => config.theme || config.color
   )
 
   if (!colorConfig.length) {
@@ -112,28 +112,13 @@ const ChartTooltipContent = React.forwardRef<
       nameKey?: string
       labelKey?: string
     }
->(
-  (
-    {
-      active,
-      payload,
-      className,
-      indicator = "dot",
-      hideLabel = false,
-      hideIndicator = false,
-      label,
-      labelFormatter,
-      labelClassName,
-      formatter,
-      color,
-      nameKey,
-      labelKey,
-    },
-    ref
-  ) => {
-    const { config } = useChart()
-
+>(({
+      active, payload, className, indicator = "dot",
+      hideLabel = false, hideIndicator = false, label, labelFormatter,
+       labelClassName, formatter, color, nameKey, labelKey,
+    }, ref ) => { const { config } = useChart()
     const tooltipLabel = React.useMemo(() => {
+
       if (hideLabel || !payload?.length) {
         return null
       }
@@ -151,23 +136,14 @@ const ChartTooltipContent = React.forwardRef<
           <div className={cn("font-medium", labelClassName)}>
             {labelFormatter(value, payload)}
           </div>
-        )
-      }
+        )}
 
       if (!value) {
         return null
       }
 
       return <div className={cn("font-medium", labelClassName)}>{value}</div>
-    }, [
-      label,
-      labelFormatter,
-      payload,
-      hideLabel,
-      labelClassName,
-      config,
-      labelKey,
-    ])
+    }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey, ])
 
     if (!active || !payload?.length) {
       return null
@@ -264,18 +240,12 @@ const ChartLegendContent = React.forwardRef<
     Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
       hideIcon?: boolean
       nameKey?: string
-    }
->(
-  (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
-    ref
-  ) => {
-    const { config } = useChart()
-
+    }>(({ className, hideIcon = false,
+       payload, verticalAlign = "bottom", nameKey },
+    ref) => { const { config } = useChart()
     if (!payload?.length) {
       return null
     }
-
     return (
       <div
         ref={ref}

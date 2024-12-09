@@ -1,13 +1,11 @@
 "use client"; 
 import "./globals.css";
 import { QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import { ToastContainer } from 'react-toastify';
 import { useState } from 'react';
-import 'react-toastify/dist/ReactToastify.css' ;
 import {cn } from '@/lib/utils';
 import { UserContextProvider } from '@/context/UserContext';
 
-export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
@@ -17,7 +15,6 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
         <UserContextProvider>
         {children}
         </UserContextProvider>
-        <ToastContainer/>
       </QueryClientProvider>
       
       </body>

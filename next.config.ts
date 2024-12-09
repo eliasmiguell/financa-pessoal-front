@@ -1,25 +1,30 @@
 import type { NextConfig } from 'next';
 
-// productionBrowserSourceMaps: false,
-// productionSourceMaps: false,
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '.*',
+        hostname: 'example.com', // Ajuste para os domínios permitidos
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.example.com', // Outro domínio permitido
         port: '',
         pathname: '/**',
       },
     ],
-  }, 
-  webpack(config, { dev, isServer }) {
-    // Desabilita source maps em produção
-    if (!dev && !isServer) {
-      config.devtool = false;
-    }
+  },
+  productionBrowserSourceMaps: false, // Desabilita source maps no navegador em produção
+  webpack(config) {
+    // Configurações adicionais para o Webpack podem ser adicionadas aqui
     return config;
   },
 };
 
 export default nextConfig;
+
+
+

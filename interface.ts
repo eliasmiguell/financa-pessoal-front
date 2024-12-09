@@ -2,9 +2,10 @@ import { ReactNode } from 'react'
 
 export interface IAuthInput{
   label:string,
-  newState:(state: string)=>void,
+  newState:(state: string )=>void,
   Ispassword?:boolean,
-  placeholder?:string
+  placeholder?:string,
+  value?: string | number
 }
 
 export interface IFROM{
@@ -12,19 +13,42 @@ export interface IFROM{
   children:ReactNode
 }
 
-export interface IUser {
-  user: {
-    id: number;
-    email: string;
-    username: string;
-    userimg: string;
-    bgimg: string;
-  } | undefined;
 
-  setUser: (newState: any) => void;
+export interface NewReceita {
+  user_id: number;
+  conta_id: number;
+  categoria_id: number;
+  descricao?: string;
+  valor: number;
+  tipo: string;
 }
 
-export interface ContextProps {
-  children: React.ReactNode;
+// Interface para uma transação
+export interface Transacao {
+  categoria_id: number;
+  date: string;  
+  tipo: 'receita' | 'despesa';
+  valor: string; 
 }
 
+// Interface para uma categoria
+export interface Categoria {
+  categoria_id: number;
+  categoria_nome: string;
+  total_receita: string;
+  total_despesa: string;
+}
+
+export interface UltmaTransacao {
+  transacao_id: number;
+  usuario_imagem:string;
+  usuario_nome: string;
+  tipo: string;
+  valor: number;
+  date: string;
+}
+// Interface para os dados da API
+export interface GraficoData {
+  dbtransacoes: Transacao[];
+  dbcategorias: Categoria[];
+}

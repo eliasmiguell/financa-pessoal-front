@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from 'react';
-import { toast} from 'react-toastify';
 import AuthInput from '@/components/InputAuth';
 import Link from 'next/link';
 import { makeRequest } from '../../../../axios';
@@ -11,6 +10,8 @@ import { makeRequest } from '../../../../axios';
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [error, setError ] = useState('');
+  const [suscess, setSuscess ] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -23,11 +24,11 @@ const RegisterPage = () => {
       setEmail(' ');
       setPassword(' ');
       setConfirmPassword(' ');
-      toast.success(res.data.message)
+      setSuscess (res.data.message)
       return true
-    }).catch((err)=>{
-    toast.error(err.response.data.message)
-     console.log(err)
+    }).catch((error)=>{
+      setError(error.response.data.message)
+     console.log(error)
      return null
     }) 
   };
@@ -48,6 +49,8 @@ const RegisterPage = () => {
         <div>
           <AuthInput placeholder="Confirme sua senha" label='Confirme senha' newState={setConfirmPassword} Ispassword/>
         </div>
+        {suscess && <span className="text-green-500 my-3">{suscess}</span>}
+        {error && <span className="text-red-500 my-3">{error}</span>}
           <button
             type="submit"
             onClick={(e)=>handleSubmit(e)}

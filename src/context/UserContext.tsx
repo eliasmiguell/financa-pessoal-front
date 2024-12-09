@@ -1,6 +1,22 @@
 import { createContext, useEffect, useState } from 'react';
-import { IUser as User, ContextProps} from '../../interface';
 
+
+
+export interface User {
+  user: {
+    id: number;
+    email: string;
+    username: string;
+    userimg: string;
+    bgimg: string;
+  } | undefined;
+
+  setUser: (newState: any) => void;
+}
+
+export interface ContextProps {
+  children: React.ReactNode;
+}
 const initialValue = {
   user: undefined,
   setUser: () => {},
@@ -12,7 +28,7 @@ export const UserContextProvider = ({ children }: ContextProps) => {
   const [user, setUser] = useState(initialValue.user);
   
   useEffect(() => {
-      const UserJSON = localStorage.getItem("rede-social:user");
+      const UserJSON = localStorage.getItem("financa:user");
       if (UserJSON) {
         setUser(JSON.parse(UserJSON));
       }
