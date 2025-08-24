@@ -1,22 +1,20 @@
-"use client"; 
+import type { Metadata } from "next";
 import "./globals.css";
-import { QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import { useState } from 'react';
-import {cn } from '@/lib/utils';
-import { UserContextProvider } from '@/context/UserContext';
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
-  const [queryClient] = useState(() => new QueryClient());
+export const metadata: Metadata = {
+  title: "Finanças Pessoais - Gestão Financeira Completa",
+  description: "Sistema completo de gestão financeira pessoal e empresarial",
+};
 
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="pt-Br">
-      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
-      <QueryClientProvider client={queryClient}>
-        <UserContextProvider>
+    <html lang="pt-BR">
+      <body className="antialiased bg-gray-50 font-sans">
         {children}
-        </UserContextProvider>
-      </QueryClientProvider>
-      
       </body>
     </html>
   );

@@ -1,40 +1,35 @@
-"use client"; 
+"use client";
 
-import { Sidebar } from '@/components/sidebar';
-import { useQuery } from '@tanstack/react-query';
-import { ReactNode, useEffect } from 'react';
-import { makeRequest } from '../../../axios';
-import { useRouter } from 'next/navigation';
+import { UserContextProvider } from "@/context/UserContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 
-export default function MainHome({children}:{children:ReactNode}) {
-  const router = useRouter()
-  const { data, isError, error, isSuccess}= useQuery({
-    queryKey:["refresh"],
-    queryFn:async ()=> await makeRequest.get('/authRefresh')
-    .then((res)=>{
-      return res.data;
-    }),
-    retry:false,
-    refetchInterval:60 * 50 * 1000
-  })
-
-  if(isSuccess){
-    console.log(data.message)
-  }
-
-  useEffect(()=>{
-    if(isError){
-      console.log(error)
-      router.push('/login')
-    }
-  }, [isError, error, router])
+export default function AuthenticatedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <div>
-      <Sidebar/>
+    <QueryClientProvider client={queryClient}>
+      <UserContextProvider>
         {children}
-     </div>
-    
-    
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </UserContextProvider>
+    </QueryClientProvider>
   );
 }

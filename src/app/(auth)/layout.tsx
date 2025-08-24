@@ -1,17 +1,35 @@
+"use client";
 
-function Form( {children}:{children:React.ReactNode}) {
-  return(
-    <main style={{ backgroundImage: `url(${'/image/images-fundo.jpeg'})`}}className=" relative min-h-screen inset-0 bg-center bg-gray-100">
-   <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-50">
-   <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-lg">
-    <form className="space-y-6 ">
-          {children}
-          
-    </form>
-    </div>
-    </div>
-  </main>
-  )
+import { UserContextProvider } from "@/context/UserContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
+
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <UserContextProvider>
+        {children}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </UserContextProvider>
+    </QueryClientProvider>
+  );
 }
-
-export default Form;

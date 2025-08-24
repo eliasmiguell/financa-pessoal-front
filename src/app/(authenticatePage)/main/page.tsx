@@ -1,284 +1,135 @@
 "use client";
-import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { UserContext } from '@/context/UserContext';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { DollarSign, Link, LogOut} from 'lucide-react';
-import { useContext, useState } from 'react';
 
-import useAdicionarReceita from '../../../../hooks/useAdicionarReceita';
-import FinanceCharts from '@/components/chart';
-import {useSaldoAtual, UltimasTransacoes} from '../../../../hooks/useSaldoAtual';
-import { UltmaTransacao } from '../../../../interface';
-function Main() {
-  const {user}= useContext(UserContext)
-  const [showModal, setShowModal] = useState(false);
-  const [errors, setError] = useState('');
-  const [clickedButton, setClickedButton] = useState("");
-  const [formData, setFormData] = useState({
-    user_id:user?.id,
-    conta_id:'',
-    categoria_id:'',
-    descricao: "",
-    valor:0,
-    tipo: "despesa"
-    
-  });
-  const { mutate } = useAdicionarReceita();
-  const saldoAtualQuery= useSaldoAtual();
-  const TransacoesQuery= UltimasTransacoes();
+import { useState } from "react";
+import { useUser } from "@/context/UserContext";
+import { useRouter } from "next/navigation";
+import DashboardHeader from "@/components/DashboardHeader";
+import Sidebar from "@/components/Sidebar";
+import FinancialSummary from "@/components/FinancialSummary";
+import ExpenseCategories from "@/components/ExpenseCategories";
+import ExpenseList from "@/components/ExpenseList";
+import IncomeList from "@/components/IncomeList";
+import FinancialGoals from "@/components/FinancialGoals";
+import SavingsSuggestions from "@/components/SavingsSuggestions";
+import BusinessSection from "@/components/BusinessSection";
+import ChartsSection from "@/components/ChartsSection";
 
-  console.log(saldoAtualQuery.data,TransacoesQuery.data?.utlimasCincoTrasacoes )
+export default function MainDashboard() {
+  const { user, logout } = useUser();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'conta_id' || name === 'categoria_id' || name === 'valor' ? Number(value) : value,
-    }));
+  // Dados mockados simples para demonstração
+  const mockSummary = {
+    totalIncome: 5000,
+    totalExpenses: 3200,
+    balance: 1800,
+    savings: 360,
+    emergencyFund: 180
   };
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
-  if (!formData.tipo || !formData.conta_id || !formData.categoria_id || !formData.valor) {
-    setError('Por favor, preencha todos os campos obrigatórios.');
-    return;
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setIsSidebarOpen(false);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Redirecionando...</p>
+        </div>
+      </div>
+    );
   }
 
-  // Use a mutação
-  mutate({
-    user_id: Number(user?.id),
-    conta_id:Number(formData.conta_id) ,
-    categoria_id: Number(formData.categoria_id),
-    descricao: formData.descricao,
-    valor: formData.valor,
-    tipo: formData.tipo,
-  });
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+      />
 
-  setFormData({
-    user_id: user?.id,
-    conta_id: '',
-    categoria_id: '',
-    descricao: '',
-    valor: 0,
-    tipo: '',
-  });
-  setShowModal(false)
-};
-
-
-
-
- 
-  
-  const despesas = 5
-  const receita =   5000
-  const saldo = despesas > receita
-  // if (TransacoesQuery.isLoading) return <div>Carregando...</div>;
-  // if (TransacoesQuery.isError) return <div>Erro ao carregar as transações.</div>;
-  // if (saldoAtualQuery.isLoading) return <div>Carregando...</div>;
-  // if (saldoAtualQuery.isError) return <div>Erro ao carregar o saldo.</div>;
-  return(
-    <main className='sm:ml-40 p-4 relative'>
-
-      <section className='p-4 my-6 sm:mb-4'>
-        <span className='text-xl'>Olá</span>
-        <h1 className='font-bold text-xl text-gray-500 flex '> {user?.username? user.username: "fulano"}</h1>
-      </section>
-
-      <section className=' grid grid-cols-1  md:grid-cols-2 gap-4 lg:grid-cols-4 '>
-          <Card className='p-5 shadow'>
-            <div className='flex items-center justify-center '>
-              <CardTitle className='text-ls sm:text-xl text-gray-600 select-none'>
-                  Saldo Atual
-              </CardTitle>
-              <DollarSign className='ml-auto w-4 h-4'/>
-            </div>
-
-            <CardDescription>
-              Seu saldo atual 
-            </CardDescription>
-            <CardHeader>
-              <p className={`text-4xl ${saldo? "text-red-500": 'text-green-600'} select-none font-bold`}>R$ { 562}</p>
-            </CardHeader>
-
-            <div className='flex gap-3 sm:mt-[50px]'>
-              <Button onClick={()=>{setShowModal(!showModal), setClickedButton("botaoMaisReceita")}} className='bg-green-400 hover:bg-green-800'>+ Receita</Button>
-              <Button onClick={()=>{setShowModal(!showModal), setClickedButton("botaoDespesas")}} className='bg-red-400 hover:bg-red-800'>Registrar despesas</Button>
-            </div>
-             
-          </Card>
-
-          <Card className='p-5 md:w-[30vw] sm:w-full shadow'>
-            <div className='flex fi items-center justify-center '>
-              <CardTitle className='text-ls sm:text-xl text-gray-600 select-none'>
-              Ultimas transações
-              </CardTitle>
-              <DollarSign className='ml-auto w-4 h-4'/>
-            </div>
-
-            <div className='py-6 '>
-            <ul>
-            {TransacoesQuery.data?.utlimasCincoTrasacoes.map((transacao:UltmaTransacao) => (
-             <li key={transacao.transacao_id} className='border-b'>
-            <CardDescription className='flex justify-center items-center gap-3 '>
-            <Link href='#'  
-                    className='flex h-4 w-4 bg-primary rounded-full text-lg items-center
-                     justify-center text-primary-foreground md:text-base gap-2' >
-                      <Avatar>
-                    <AvatarImage src={transacao?.usuario_imagem} alt={transacao.usuario_nome} className=' h-4 w-4 rounded-full'/>
-                    <AvatarFallback>CN</AvatarFallback>
-                    <span className='sr-only'>Imagem do useuario</span>
-                      </Avatar>
-                    </Link>
-                      <p>{transacao.usuario_nome}</p>
-                      <p>Tipo: {transacao.tipo}</p>
-                      <p>Valor: R${transacao.valor}</p>
-                      <p>Data: {transacao.date}</p>
-              </CardDescription>
-          </li>
-        ))}
-      </ul>
-            </div>
-            
-            <div className='flex gap-3'>
-              <a  href={'/todasTrasacoes'} className='bg-green-400 hover:bg-green-800 font-bold p-1 text-white rounded-sm'>
-              Ver todas
-              </a>
-              
-            </div>
-             
-  </Card>
-      </section>
-      <section className='mt-4 sm:w-3/4'>
-      <FinanceCharts/>
-      </section>
-      { showModal && (<section className=' z-10 top-0 bottom-0 right-0 left-0 fixed   justify-center bg-[#00000094] flex '>
-        <form
-      onSubmit={handleSubmit}
-      className="sm:w-1/3 w-5/6 sm:h-[40vh] md:h-[75vh] h-[79vh] mt-[10vh] bg-white flex flex-col rounded-lg p-4"
-    >
-      <div className="flex justify-between">
-        <h2 className="text-xl font-semibold pb-3 text-gray-700">
-          {clickedButton === "botaoMaisReceita" ? "Adicionar Receita" : "Registrar Despesa"}
-        </h2>
-      </div>
-      {clickedButton === "botaoMaisReceita" ? (
-        <div className="my-4">
-        <label>Tipo</label>
-        <select
-          name="tipo"
-          required
-          value={formData.tipo}
-          onChange={handleChange}
-          className="cursor-pointer"
-        >
-          <option value="receita">receita</option>
-        </select>
-      </div>
-
-      ) : (
-
-        (
-          <div className="my-4">
-          <label>Tipo</label>
-          <select
-            name="tipo"
-            required
-            value={formData.tipo}
-            onChange={handleChange}
-            className="cursor-pointer"
-          >
-            <option value="despesa">despesa</option>
-          </select>
-        </div>
-  
-        )
-      )}
-      
-
-      {/* Input Conta */}
-      <div className="my-4">
-        <label className="pr-2">Conta</label>
-        <select
-          name="conta_id"
-          value={formData.conta_id || ''}
-          onChange={handleChange}
-          required
-          className="cursor-pointer"
-        >
-          <option value="">Selecione</option>
-          <option value={1}>Conta Corrente</option>
-          <option value={2}>Poupança</option>
-        </select>
-      </div>
-
-      {/* Input Categoria */}
-      <div className="my-4">
-        <label>Categoria</label>
-        <select
-        required
-          name="categoria_id"
-          value={formData.categoria_id || ''}
-          onChange={handleChange}
-          className="cursor-pointer"
-        >
-          <option value="">Selecione</option>
-          <option value={1}>Alimentação</option>
-          <option value={2}>Lazer</option>
-          <option value={3}>Salário</option>
-        </select>
-      </div>
-
-   
-
-      {/* Input Descrição */}
-      <div className="my-4">
-        <label>Descrição</label>
-        <input
-          type="text"
-          name="descricao"
-          placeholder="Descrição opcional"
-          value={formData.descricao}
-          onChange={handleChange}
-          className="w-full border rounded px-2 py-1"
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col lg:ml-0">
+        {/* Header */}
+        <DashboardHeader
+          user={user}
+          onLogout={handleLogout}
+          onMenuToggle={toggleSidebar}
+          isMenuOpen={isSidebarOpen}
         />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {activeTab === "dashboard" && (
+              <div className="space-y-8">
+                {/* Financial Summary */}
+                <FinancialSummary data={mockSummary} />
+                
+                {/* Charts Section */}
+                <ChartsSection />
+                
+                {/* Expense Categories */}
+                <ExpenseCategories />
+                
+                {/* Savings Suggestions */}
+                <SavingsSuggestions />
+                
+                {/* Próximas Despesas */}
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Próximas Despesas
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Aluguel</p>
+                        <p className="text-sm text-gray-500">Moradia</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-gray-900">R$ 1.200,00</p>
+                        <p className="text-sm text-gray-500">05/09/2024</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-gray-900">Conta de Luz</p>
+                        <p className="text-sm text-gray-500">Serviços</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-gray-900">R$ 150,00</p>
+                        <p className="text-sm text-gray-500">10/09/2024</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "expenses" && <ExpenseList />}
+            {activeTab === "income" && <IncomeList />}
+            {activeTab === "goals" && <FinancialGoals />}
+            {activeTab === "business" && <BusinessSection />}
+            {activeTab === "analytics" && <ChartsSection />}
+          </div>
+        </main>
       </div>
-
-      {/* Input Valor */}
-      <div className="my-4">
-        <label>Valor</label>
-        <input
-        className="w-full border rounded px-2 py-1"
-          name="valor"
-          value={formData.valor}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      {errors && <span className="text-red-500 my-3">{errors}</span>}
-
-      {/* Botões */}
-      <div className="flex gap-3 sm:mt-[15px]">
-        <Button type="submit" className="bg-green-400 hover:bg-green-800 text-lg" >
-          Salvar
-        </Button>
-        <Button
-          type="button"
-          onClick={() => setShowModal(!showModal)}
-          className="bg-red-400 hover:bg-red-800 text-lg"
-        >
-          Cancelar
-        </Button>
-      </div>
-    </form>
-    </section>)
-
-      }
-
-    </main>
-  )
+    </div>
+  );
 }
-
-export default Main;

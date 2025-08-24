@@ -22,9 +22,10 @@ const useAdicionarReceita = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['receita'] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
+      console.log(error);
       console.error(error);
-      throw new Error(error?.response?.data?.message || error?.message || 'Erro ao salvar os dados.');
+      throw new Error(error.message || 'Erro ao salvar os dados.');
     },
   });
 
