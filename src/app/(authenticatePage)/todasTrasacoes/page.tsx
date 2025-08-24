@@ -1,6 +1,6 @@
 'use client'
 
-import TodasTransacoes from "@/components/transacaes/Transacoes";
+import TodasTransacoes from "../../../components/transacaes/Transacoes";
 
 
 function TodasTrasacoesPage() {
