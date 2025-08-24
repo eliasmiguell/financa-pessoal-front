@@ -1,6 +1,6 @@
 'use client'
 
-import TodasTrasacoes from "@/components/transacaes/Transacoes";
+import TodasTransacoes from "@/components/transacaes/Transacoes";
 
 
 function TodasTrasacoesPage() {
@@ -13,7 +13,7 @@ function TodasTrasacoesPage() {
     </div>
     <div className='sm:ml-[200px]  px-6'>
        
-          <TodasTrasacoes/> 
+          <TodasTransacoes/> 
     </div>
     </>
   )
