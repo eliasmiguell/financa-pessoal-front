@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { User } from "@/context/UserContext";
+import { User } from "../context/UserContext";
 import { 
-  LogOut, 
   Bell, 
   Settings, 
   Menu, 

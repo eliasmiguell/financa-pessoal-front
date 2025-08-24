@@ -2,17 +2,13 @@
 
 import { 
   Home, 
-  CreditCard, 
-  DollarSign, 
   Target, 
   Building2, 
   BarChart3, 
   Settings,
   Plus,
   TrendingUp,
-  TrendingDown,
-  PiggyBank,
-  Shield
+  TrendingDown
 } from "lucide-react";
 
 interface SidebarProps {

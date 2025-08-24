@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@/context/UserContext";
+import { useUser } from "../../../context/UserContext";
 import { useRouter } from "next/navigation";
-import DashboardHeader from "@/components/DashboardHeader";
-import Sidebar from "@/components/Sidebar";
-import FinancialSummary from "@/components/FinancialSummary";
-import ExpenseCategories from "@/components/ExpenseCategories";
-import ExpenseList from "@/components/ExpenseList";
-import IncomeList from "@/components/IncomeList";
-import FinancialGoals from "@/components/FinancialGoals";
-import SavingsSuggestions from "@/components/SavingsSuggestions";
-import BusinessSection from "@/components/BusinessSection";
-import ChartsSection from "@/components/ChartsSection";
+import DashboardHeader from "../../../components/DashboardHeader";
+import Sidebar from "../../../components/Sidebar";
+import FinancialSummary from "../../../components/FinancialSummary";
+import ExpenseCategories from "../../../components/ExpenseCategories";
+import ExpenseList from "../../../components/ExpenseList";
+import IncomeList from "../../../components/IncomeList";
+import FinancialGoals from "../../../components/FinancialGoals";
+import SavingsSuggestions from "../../../components/SavingsSuggestions";
+import BusinessSection from "../../../components/BusinessSection";
+import ChartsSection from "../../../components/ChartsSection";
 
 export default function MainDashboard() {
   const { user, logout } = useUser();
