@@ -1,7 +1,6 @@
 import {Sheet, SheetTrigger, SheetContent} from '../ui/sheet';
-import { Button } from '../ui/button';
 import Link from 'next/link';
-import { Package, PanelBottom, Settings2, LogOut, LayoutDashboard, BarChart, DollarSign, HelpCircle, HelpCircleIcon} from 'lucide-react';
+import { PanelBottom, Settings2, LogOut, LayoutDashboard, BarChart, DollarSign, HelpCircle, HelpCircleIcon} from 'lucide-react';
 import {TooltipProvider, Tooltip, TooltipContent, TooltipTrigger} from '../ui/tooltip'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useContext, useEffect } from 'react';
