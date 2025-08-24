@@ -22,21 +22,21 @@ export default function Register() {
     setLoading(true);
 
     if (password !== confirmPassword) {
-      toast.error("As senhas não coincidem");
+      toast.error("As senhas não são iguais");
       setLoading(false);
       return;
     }
 
     try {
-      await makeRequest.post("/auth/register", {
+      const response = await makeRequest.post("/authregister", {
         name,
         email,
         password,
-      });
-
-      toast.success("Conta criada com sucesso! Faça login para continuar.");
+        confirmPassword,
+      })
+      toast.success(response.data.message);
       router.push("/login");
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Erro ao criar conta";
       toast.error(errorMessage);
     } finally {
@@ -273,7 +273,7 @@ export default function Register() {
               </div>
             </div>
 
-            <div className="flex items-start">
+            {/* <div className="flex items-start">
               <input
                 id="terms"
                 name="terms"
@@ -291,7 +291,7 @@ export default function Register() {
                   Política de Privacidade
                 </Link>
               </label>
-            </div>
+            </div> */}
 
             <button
               type="submit"
@@ -332,7 +332,7 @@ export default function Register() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            {/* <div className="mt-6 grid grid-cols-2 gap-3">
               <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200">
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -349,7 +349,7 @@ export default function Register() {
                 </svg>
                 <span className="ml-2">Twitter</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

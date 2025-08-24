@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await makeRequest.post("/auth/login", {
+      const response = await makeRequest.post("/authlogin", {
         email,
         password,
       });
@@ -225,12 +225,12 @@ export default function Login() {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />
               </div>
-              <div className="relative flex justify-center text-sm">
+              {/* <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">Ou continue com</span>
-              </div>
+              </div> */}
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            {/* <div className="mt-6 grid grid-cols-2 gap-3">
               <button className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors duration-200">
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -247,7 +247,7 @@ export default function Login() {
                 </svg>
                 <span className="ml-2">Twitter</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

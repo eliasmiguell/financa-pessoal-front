@@ -16,8 +16,8 @@ export function Sidebar() {
   useEffect(() => {
     if (user && Array.isArray(user) && user.length > 0) {
       setUser({
-        username: user[0].username,
-        userimg: user[0].userimg,
+        name: user[0].name,
+        avatar: user[0].avatar,
         id: user[0].id,
         email: user[0].email,
       });
@@ -59,12 +59,12 @@ export function Sidebar() {
           <div className='flex flex-row items-center justify-center gap-2'>
               <Link href={''} className='flex h-9 w-9  rounded-full items-center justify-center '>
               <Avatar >
-              <AvatarImage src={user?.userimg && user?.userimg} className=' h-8 w-8 rounded-full'/>
+              <AvatarImage src={user?.avatar && user?.avatar} className=' h-8 w-8 rounded-full'/>
               <AvatarFallback>CN</AvatarFallback>
               <span className='sr-only'>foto do usuario</span>
               </Avatar>
               </Link>
-              <p className='font-bold'>{user?.username}</p>
+              <p className='font-bold'>{user?.name}</p>
               </div>
               
             <Tooltip>
@@ -186,12 +186,12 @@ export function Sidebar() {
                     className='flex h-10 w-10 bg-primary rounded-full text-lg items-center
                      justify-center text-primary-foreground md:text-base gap-2' prefetch={false}>
                       <Avatar>
-                    <AvatarImage src={user?.userimg && user?.userimg} className=' h-8 w-8 rounded-full'/>
+                    <AvatarImage src={user?.avatar && user?.avatar} className=' h-8 w-8 rounded-full'/>
                     <AvatarFallback>CN</AvatarFallback>
                     <span className='sr-only'>Imagem do useuario</span>
                       </Avatar>
                     </Link>
-                    <p>{user?.username}</p>
+                    <p>{user?.name}</p>
                     </div>
                     <Link href={'/main'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
