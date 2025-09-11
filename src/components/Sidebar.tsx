@@ -10,6 +10,7 @@ import {
   TrendingUp,
   TrendingDown
 } from "lucide-react";
+import Link from "next/link";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -62,23 +63,26 @@ const quickActions = [
     id: "add-expense",
     name: "Nova Despesa",
     icon: Plus,
-    color: "text-red-600 bg-red-50 hover:bg-red-100"
+    color: "text-red-600 bg-red-50 hover:bg-red-100",
+    href: "/novaDespesa"
   },
   {
     id: "add-income",
     name: "Nova Receita",
-    icon: Plus,
-    color: "text-green-600 bg-green-50 hover:bg-green-100"
+    icon: TrendingUp,
+    color: "text-green-600 bg-green-50 hover:bg-green-100",
+    href: "/novaReceita"
   },
   {
     id: "add-goal",
     name: "Nova Meta",
     icon: Target,
-    color: "text-purple-600 bg-purple-50 hover:bg-purple-100"
+    color: "text-purple-600 bg-purple-50 hover:bg-purple-100",
+    href: "/novaMeta"
   }
 ];
 
-export default function Sidebar({ isOpen, onClose, activeTab, onTabChange }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
   return (
     <>
       {/* Overlay para mobile */}
@@ -133,10 +137,29 @@ export default function Sidebar({ isOpen, onClose, activeTab, onTabChange }: Sid
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               
+              const getHref = (id: string) => {
+                switch (id) {
+                  case 'dashboard':
+                    return '/main';
+                  case 'expenses':
+                    return '/gerenciarDespesas';
+                  case 'income':
+                    return '/gerenciarReceitas';
+                  case 'goals':
+                    return '/gerenciarMetas';
+                  case 'business':
+                    return '/gerenciarNegocios';
+                  case 'analytics':
+                    return '/main';
+                  default:
+                    return '/main';
+                }
+              };
+              
               return (
-                <button
+                <Link
                   key={item.id}
-                  onClick={() => onTabChange(item.id)}
+                  href={getHref(item.id)}
                   className={`
                     w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group
                     ${isActive 
@@ -153,7 +176,7 @@ export default function Sidebar({ isOpen, onClose, activeTab, onTabChange }: Sid
                     <div className="font-medium">{item.name}</div>
                     <div className="text-xs text-gray-500">{item.description}</div>
                   </div>
-                </button>
+                </Link>
               );
             })}
           </nav>
@@ -168,8 +191,9 @@ export default function Sidebar({ isOpen, onClose, activeTab, onTabChange }: Sid
                 const Icon = action.icon;
                 
                 return (
-                  <button
+                  <Link
                     key={action.id}
+                    href={action.href}
                     className={`
                       w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
                       ${action.color}
@@ -177,7 +201,7 @@ export default function Sidebar({ isOpen, onClose, activeTab, onTabChange }: Sid
                   >
                     <Icon className="mr-2 h-4 w-4" />
                     {action.name}
-                  </button>
+                  </Link>
                 );
               })}
             </div>

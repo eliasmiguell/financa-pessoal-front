@@ -10,6 +10,7 @@ import {
   User as UserIcon,
   ChevronDown 
 } from "lucide-react";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
   user: User;
@@ -71,21 +72,21 @@ export default function DashboardHeader({
 
           {/* Menu Desktop */}
           <nav className="hidden lg:flex space-x-8">
-            <a href="#" className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            <Link href="/main" className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               Dashboard
-            </a>
-            <a href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               Despesas
-            </a>
-            <a href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               Receitas
-            </a>
-            <a href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            </Link>
+              <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               Metas
-            </a>
-            <a href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
               Negócios
-            </a>
+            </Link>
           </nav>
 
           {/* Ações do Usuário */}

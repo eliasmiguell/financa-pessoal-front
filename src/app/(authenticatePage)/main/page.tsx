@@ -1,10 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "../../../context/UserContext";
-import { useRouter } from "next/navigation";
-import DashboardHeader from "../../../components/DashboardHeader";
-import Sidebar from "../../../components/Sidebar";
 import FinancialSummary from "../../../components/FinancialSummary";
 import ExpenseCategories from "../../../components/ExpenseCategories";
 import ExpenseList from "../../../components/ExpenseList";
@@ -13,74 +9,45 @@ import FinancialGoals from "../../../components/FinancialGoals";
 import SavingsSuggestions from "../../../components/SavingsSuggestions";
 import BusinessSection from "../../../components/BusinessSection";
 import ChartsSection from "../../../components/ChartsSection";
+import useDashboardData from "../../../../hooks/useDashboardData";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Calendar, DollarSign, AlertCircle } from "lucide-react";
+import DebugAuth from "../../../components/DebugAuth";
 
 export default function MainDashboard() {
-  const { user, logout } = useUser();
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeTab] = useState("dashboard");
+  const { data: dashboardData, isLoading } = useDashboardData();
 
-  // Dados mockados simples para demonstração
-  const mockSummary = {
-    totalIncome: 5000,
-    totalExpenses: 3200,
-    balance: 1800,
-    savings: 360,
-    emergencyFund: 180
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
   };
 
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    setIsSidebarOpen(false);
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  if (!user) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Redirecionando...</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-      />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-0">
-        {/* Header */}
-        <DashboardHeader
-          user={user}
-          onLogout={handleLogout}
-          onMenuToggle={toggleSidebar}
-          isMenuOpen={isSidebarOpen}
-        />
-
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {activeTab === "dashboard" && (
               <div className="space-y-8">
+                {/* Debug Auth - REMOVER DEPOIS */}
+                <DebugAuth />
+                
                 {/* Financial Summary */}
-                <FinancialSummary data={mockSummary} />
+                <FinancialSummary data={dashboardData} />
                 
                 {/* Charts Section */}
                 <ChartsSection />
@@ -92,44 +59,95 @@ export default function MainDashboard() {
                 <SavingsSuggestions />
                 
                 {/* Próximas Despesas */}
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Próximas Despesas
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Aluguel</p>
-                        <p className="text-sm text-gray-500">Moradia</p>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Calendar className="w-5 h-5" />
+                      Próximas Despesas
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {dashboardData.upcomingExpenses.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Nenhuma despesa pendente</p>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-gray-900">R$ 1.200,00</p>
-                        <p className="text-sm text-gray-500">05/09/2024</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {dashboardData.upcomingExpenses.map((despesa) => (
+                          <div key={despesa.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <p className="font-medium text-gray-900">{despesa.description}</p>
+                              <p className="text-sm text-gray-500">
+                                {despesa.category?.name || 'Sem categoria'}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold text-gray-900">
+                                {formatCurrency(despesa.amount)}
+                              </p>
+                              <p className={`text-sm ${
+                                despesa.status === 'vencido' ? 'text-red-500' : 'text-gray-500'
+                              }`}>
+                                {despesa.dueDate ? formatDate(despesa.dueDate) : 'Sem data'}
+                                {despesa.status === 'vencido' && (
+                                  <AlertCircle className="w-3 h-3 inline ml-1" />
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-900">Conta de Luz</p>
-                        <p className="text-sm text-gray-500">Serviços</p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Despesas Recentes */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="w-5 h-5" />
+                      Despesas Recentes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {dashboardData.recentExpenses.length === 0 ? (
+                      <div className="text-center py-8">
+                        <DollarSign className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Nenhuma despesa registrada</p>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-gray-900">R$ 150,00</p>
-                        <p className="text-sm text-gray-500">10/09/2024</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {dashboardData.recentExpenses.map((despesa) => (
+                          <div key={despesa.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                              <p className="font-medium text-gray-900">{despesa.description}</p>
+                              <p className="text-sm text-gray-500">
+                                {despesa.category?.name || 'Sem categoria'}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold text-gray-900">
+                                {formatCurrency(despesa.amount)}
+                              </p>
+                              <p className="text-sm text-gray-500">
+                                {formatDate(despesa.createdAt)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  </div>
-                </div>
+                    )}
+                  </CardContent>
+                </Card>
               </div>
             )}
 
-            {activeTab === "expenses" && <ExpenseList />}
-            {activeTab === "income" && <IncomeList />}
-            {activeTab === "goals" && <FinancialGoals />}
-            {activeTab === "business" && <BusinessSection />}
-            {activeTab === "analytics" && <ChartsSection />}
-          </div>
-        </main>
-      </div>
+      {activeTab === "expenses" && <ExpenseList />}
+      {activeTab === "income" && <IncomeList />}
+      {activeTab === "goals" && <FinancialGoals />}
+      {activeTab === "business" && <BusinessSection />}
+      {activeTab === "analytics" && <ChartsSection />}
     </div>
   );
 }

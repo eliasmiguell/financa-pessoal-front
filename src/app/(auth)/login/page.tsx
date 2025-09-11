@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await makeRequest.post("/authlogin", {
+      const response = await makeRequest.post("/auth/login", {
         email,
         password,
       });

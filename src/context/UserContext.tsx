@@ -40,18 +40,31 @@ export const UserContextProvider = ({ children }: ContextProps) => {
   const logout = () => {
     setUser(undefined);
     localStorage.removeItem("financa:user");
+    localStorage.removeItem("financa:accessToken");
+    localStorage.removeItem("financa:refreshToken");
   };
 
   useEffect(() => {
     const userJSON = localStorage.getItem("financa:user");
-    if (userJSON) {
+    const accessToken = localStorage.getItem("financa:accessToken");
+    
+    // Só carregar usuário se tiver token válido
+    if (userJSON && accessToken) {
       try {
         const userData = JSON.parse(userJSON);
         setUser(userData);
       } catch (error) {
         console.error("Erro ao carregar usuário do localStorage:", error);
         localStorage.removeItem("financa:user");
+        localStorage.removeItem("financa:accessToken");
+        localStorage.removeItem("financa:refreshToken");
       }
+    } else if (userJSON && !accessToken) {
+      // Se tem usuário mas não tem token, limpar tudo
+      console.log("Usuário encontrado mas sem token, limpando dados");
+      localStorage.removeItem("financa:user");
+      localStorage.removeItem("financa:accessToken");
+      localStorage.removeItem("financa:refreshToken");
     }
   }, []);
 

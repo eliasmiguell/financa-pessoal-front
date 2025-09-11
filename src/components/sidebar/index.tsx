@@ -1,6 +1,6 @@
 import {Sheet, SheetTrigger, SheetContent} from '../ui/sheet';
 import Link from 'next/link';
-import { PanelBottom, Settings2, LogOut, LayoutDashboard, BarChart, DollarSign, HelpCircle, HelpCircleIcon} from 'lucide-react';
+import { PanelBottom, Settings2, LogOut, LayoutDashboard, BarChart, DollarSign, HelpCircle, HelpCircleIcon, Plus, TrendingUp, Target} from 'lucide-react';
 import {TooltipProvider, Tooltip, TooltipContent, TooltipTrigger} from '../ui/tooltip'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { useContext, useEffect } from 'react';
@@ -97,7 +97,49 @@ export function Sidebar() {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <Link href={'/novaDespesa'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <div className='flex  items-center justify-center gap-2 ml-[60px]'>
+                <div className='flex shrink-0  justify-center items-center gap-2'>
+                <Plus className=' h-4 w-4 '/>
+                <span className='sr-only'>Nova Despesa</span>
+                </div>
+                <p>Nova Despesa</p>
+                </div>
+                </Link>
+              </TooltipTrigger>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={'/novaReceita'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <div className='flex  items-center justify-center gap-2 ml-[60px]'>
+                <div className='flex shrink-0  justify-center items-center gap-2'>
+                <TrendingUp className=' h-4 w-4 '/>
+                <span className='sr-only'>Nova Receita</span>
+                </div>
+                <p>Nova Receita</p>
+                </div>
+                </Link>
+              </TooltipTrigger>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={'/novaMeta'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <div className='flex  items-center justify-center gap-2 ml-[60px]'>
+                <div className='flex shrink-0  justify-center items-center gap-2'>
+                <Target className=' h-4 w-4 '/>
+                <span className='sr-only'>Nova Meta</span>
+                </div>
+                <p>Nova Meta</p>
+                </div>
+                </Link>
+              </TooltipTrigger>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href={'/main'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
                 <div className='flex  items-center justify-center gap-2 ml-[60px]'>
                 <div className='flex shrink-0  justify-center items-center gap-2'>
                 <BarChart className=' h-4 w-4 '/>
@@ -111,7 +153,7 @@ export function Sidebar() {
 
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href={''} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
+                <Link href={'/main'} className='flex h-9 w-9 shrink-0  rounded-lg items-center justify-center text-muted-foreground  transition-colors hover:text-foreground'>
                 <div className='flex  items-center justify-center gap-2 ml-10'>
                 <div className='flex shrink-0  justify-center items-center gap-2'>
                 <Settings2 className=' h-4 w-4 '/>
@@ -199,20 +241,35 @@ export function Sidebar() {
                     </Link>
                     <Link href={'/todasTrasacoes'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
-                    < DollarSign className='h-5 w-5 transition-all'/>
+                    <DollarSign className='h-5 w-5 transition-all'/>
                     Minhas Transações
                     </Link>
-                    <Link href={''}  
+                    <Link href={'/novaDespesa'}  
+                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
+                    <Plus className='h-5 w-5 transition-all'/>
+                    Nova Despesa
+                    </Link>
+                    <Link href={'/novaReceita'}  
+                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
+                    <TrendingUp className='h-5 w-5 transition-all'/>
+                    Nova Receita
+                    </Link>
+                    <Link href={'/novaMeta'}  
+                    className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
+                    <Target className='h-5 w-5 transition-all'/>
+                    Nova Meta
+                    </Link>
+                    <Link href={'/main'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
                     <BarChart className='h-5 w-5 transition-all'/>
                     Relatórios
                     </Link>
-                    <Link href={''}  
+                    <Link href={'/main'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
                     <Settings2 className='h-5 w-5 transition-all'/>
                     Configurações
                     </Link>
-                    <Link href={''}  
+                    <Link href={'/main'}  
                     className='flex items-center md:text-base px-2.5 gap-4 text-muted-foreground hover:text-foreground'>
                     <HelpCircleIcon className='h-5 w-5 transition-all'/>
                     Ajuda
@@ -228,7 +285,6 @@ export function Sidebar() {
                     </Link>
                   </nav>
                 </nav>
-               
                
               </SheetContent>
              

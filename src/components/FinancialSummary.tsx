@@ -15,6 +15,13 @@ interface FinancialSummaryProps {
 export default function FinancialSummary({ data }: FinancialSummaryProps) {
   const isPositive = data.balance >= 0;
 
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
       {/* Saldo Total */}
@@ -26,7 +33,7 @@ export default function FinancialSummary({ data }: FinancialSummaryProps) {
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-500">Saldo Total</p>
             <p className={`text-2xl font-bold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              R$ {data.balance.toFixed(2)}
+              {formatCurrency(data.balance)}
             </p>
           </div>
         </div>
@@ -51,7 +58,7 @@ export default function FinancialSummary({ data }: FinancialSummaryProps) {
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-500">Receitas</p>
             <p className="text-2xl font-bold text-green-600">
-              R$ {data.totalIncome.toFixed(2)}
+              {formatCurrency(data.totalIncome)}
             </p>
           </div>
         </div>
@@ -66,7 +73,7 @@ export default function FinancialSummary({ data }: FinancialSummaryProps) {
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-500">Despesas</p>
             <p className="text-2xl font-bold text-red-600">
-              R$ {data.totalExpenses.toFixed(2)}
+              {formatCurrency(data.totalExpenses)}
             </p>
           </div>
         </div>
@@ -81,7 +88,7 @@ export default function FinancialSummary({ data }: FinancialSummaryProps) {
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-500">Economia</p>
             <p className="text-2xl font-bold text-yellow-600">
-              R$ {data.savings.toFixed(2)}
+              {formatCurrency(data.savings)}
             </p>
           </div>
         </div>
@@ -96,7 +103,7 @@ export default function FinancialSummary({ data }: FinancialSummaryProps) {
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-500">Fundo de Emergência</p>
             <p className="text-2xl font-bold text-purple-600">
-              R$ {data.emergencyFund.toFixed(2)}
+              {formatCurrency(data.emergencyFund)}
             </p>
           </div>
         </div>
