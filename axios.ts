@@ -1,14 +1,17 @@
 import axios from 'axios';
 
 export const makeRequest = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, 
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8004/api', 
   withCredentials: true
 })
 
 makeRequest.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem("financa:accessToken")
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`
+  // Verificar se estamos no cliente antes de acessar localStorage
+  if (typeof window !== 'undefined') {
+    const accessToken = localStorage.getItem("financa:accessToken")
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
+    }
   }
   return config
 })
@@ -21,6 +24,12 @@ makeRequest.interceptors.response.use((response) => {
   // Verificar se é erro 401 e se não foi tentado refresh ainda
   if (error.response?.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true
+    
+    // Verificar se estamos no cliente antes de acessar localStorage
+    if (typeof window === 'undefined') {
+      return Promise.reject(error);
+    }
+    
     const refreshToken = localStorage.getItem("financa:refreshToken")
     
     console.log('Token expirado, tentando refresh...', { refreshToken: !!refreshToken });
@@ -39,7 +48,7 @@ makeRequest.interceptors.response.use((response) => {
     
     try {
       // Usar endpoint correto para refresh
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {}, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/authRefresh`, {}, {
         withCredentials: true,
         headers: {
           'Authorization': `Bearer ${refreshToken}`
@@ -59,16 +68,20 @@ makeRequest.interceptors.response.use((response) => {
       
     } catch (refreshError) {
       console.log('Erro no refresh token:', refreshError);
-      localStorage.removeItem("financa:accessToken");
-      localStorage.removeItem("financa:refreshToken");
-      localStorage.removeItem("financa:user");
-      // Aguardar um pouco antes de redirecionar para evitar loops
-      setTimeout(() => {
-        window.location.href = '/login';
-      }, 100);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("financa:accessToken");
+        localStorage.removeItem("financa:refreshToken");
+        localStorage.removeItem("financa:user");
+        // Aguardar um pouco antes de redirecionar para evitar loops
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 100);
+      }
       return Promise.reject(refreshError)
     }
   }
   
   return Promise.reject(error);
 })
+
+/*"https://api-financa-pessoal.onrender.com/api"*/

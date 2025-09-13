@@ -6,19 +6,24 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import useAdicionarDespesa, { NovaDespesa } from '../../../../hooks/useAdicionarDespesa';
-import useCategoriasDespesas from '../../../../hooks/useCategoriasDespesas';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { useAdicionarDespesa, NovaDespesa } from '../../../../hooks/useDespesas';
+import { useCategoriasDespesas } from '../../../../hooks/useDespesas';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText } from 'lucide-react';
+import { Categoria } from '../../../../hooks/useDespesas';
 
-const despesaSchema = z.object({
+export const despesaSchema = z.object({
   description: z.string().min(1, 'Descrição é obrigatória'),
   amount: z.string().min(1, 'Valor é obrigatório').refine((val) => !isNaN(Number(val)) && Number(val) > 0, 'Valor deve ser um número positivo'),
-  type: z.string().min(1, 'Tipo é obrigatório'),
-  status: z.string().min(1, 'Status é obrigatório'),
+  type: z.enum(['FIXA', 'IMPREVISTA', 'PENDENTE'], {
+    required_error: 'Tipo de despesa é obrigatório',
+  }),
+  status: z.enum(['PAGO', 'PENDENTE', 'ATRASADO'], {
+    required_error: 'Status é obrigatório',
+  }),
   categoryId: z.string().min(1, 'Categoria é obrigatória'),
   dueDate: z.string().optional(),
   paidDate: z.string().optional(),
@@ -26,7 +31,7 @@ const despesaSchema = z.object({
   recurringInterval: z.string().optional(),
 });
 
-type DespesaFormData = z.infer<typeof despesaSchema>;
+export type DespesaFormData = z.infer<typeof despesaSchema>;
 
 export default function NovaDespesaPage() {
   const router = useRouter();
@@ -42,8 +47,8 @@ export default function NovaDespesaPage() {
   } = useForm<DespesaFormData>({
     resolver: zodResolver(despesaSchema),
     defaultValues: {
-      type: 'despesa',
-      status: 'pendente',
+      type: 'FIXA',
+      status: 'PENDENTE',
       isRecurring: false,
     },
   });
@@ -61,15 +66,15 @@ export default function NovaDespesaPage() {
       const novaDespesa: NovaDespesa = {
         description: data.description,
         amount: Number(data.amount),
-        type: data.type,
-        status: data.status,
-        categoryId: Number(data.categoryId),
+        type: data.type as 'FIXA' | 'IMPREVISTA' | 'PENDENTE',
+        status: data.status as 'PAGO' | 'PENDENTE' | 'ATRASADO',
+        categoryId: data.categoryId,
         dueDate: data.dueDate || undefined,
         paidDate: data.paidDate || undefined,
         isRecurring: data.isRecurring || false,
         recurringInterval: data.recurringInterval || undefined,
       };
-
+ 
       await adicionarDespesa.mutateAsync(novaDespesa);
       toast.success('Despesa adicionada com sucesso!');
       router.push('/main');
@@ -82,15 +87,15 @@ export default function NovaDespesaPage() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="margin-6">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4"
+          className="mb-4 bg-gray-100 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
           Voltar
         </Button>
         <h1 className="text-3xl font-bold text-gray-900">Nova Despesa</h1>
@@ -163,14 +168,36 @@ export default function NovaDespesaPage() {
                   <option value="">
                     {loadingCategorias ? 'Carregando categorias...' : 'Selecione uma categoria'}
                   </option>
-                  {categorias?.map((categoria: { id: number; name: string }) => (
-                    <option key={categoria.id} value={categoria.id}>
-                      {categoria.name}
+                  {categorias?.map((categoria: Categoria) => (
+                    <option key={categoria?.id} value={categoria?.id}>
+                      {categoria?.name}
                     </option>
                   ))}
                 </select>
                 {errors.categoryId && (
                   <p className="text-sm text-red-500">{errors.categoryId.message}</p>
+                )}
+              </div>
+
+              {/* Tipo de Despesa */}
+              <div className="space-y-2">
+                <Label htmlFor="type" className="flex items-center gap-2">
+                  <Tag className="w-4 h-4" />
+                  Tipo de Despesa *
+                </Label>
+                <select
+                  id="type"
+                  {...register('type')}
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.type ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  <option value="FIXA">Fixa</option>
+                  <option value="IMPREVISTA">Imprevista</option>
+                  <option value="PENDENTE">Pendente</option>
+                </select>
+                {errors.type && (
+                  <p className="text-sm text-red-500">{errors.type.message}</p>
                 )}
               </div>
 
@@ -184,9 +211,9 @@ export default function NovaDespesaPage() {
                     errors.status ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
-                  <option value="pendente">Pendente</option>
-                  <option value="pago">Pago</option>
-                  <option value="vencido">Vencido</option>
+                  <option value="PENDENTE">Pendente</option>
+                  <option value="PAGO">Pago</option>
+                  <option value="ATRASADO">Atrasado</option>
                 </select>
                 {errors.status && (
                   <p className="text-sm text-red-500">{errors.status.message}</p>

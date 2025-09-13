@@ -35,13 +35,23 @@ export default function DashboardHeader({
           <div className="flex items-center">
             <button
               onClick={onMenuToggle}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              <div className="relative w-6 h-6">
+                <span className={`
+                  absolute top-1 left-0 w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out
+                  ${isMenuOpen ? 'rotate-45 translate-y-2' : 'translate-y-0'}
+                `} />
+                <span className={`
+                  absolute top-2.5 left-0 w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out
+                  ${isMenuOpen ? 'opacity-0' : 'opacity-100'}
+                `} />
+                <span className={`
+                  absolute top-4 left-0 w-6 h-0.5 bg-current transform transition-all duration-300 ease-in-out
+                  ${isMenuOpen ? '-rotate-45 -translate-y-2' : 'translate-y-0'}
+                `} />
+              </div>
             </button>
             
             <div className="flex items-center ml-4 lg:ml-0">
@@ -73,19 +83,19 @@ export default function DashboardHeader({
           {/* Menu Desktop */}
           <nav className="hidden lg:flex space-x-8">
             <Link href="/main" className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Dashboard
+              
             </Link>
             <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Despesas
+             
             </Link>
             <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Receitas
+              
             </Link>
               <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Metas
+              
             </Link>
             <Link href="#" className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-              Negócios
+              
             </Link>
           </nav>
 
@@ -125,18 +135,18 @@ export default function DashboardHeader({
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
                     <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
-                  <a
-                    href="#"
+                  <Link
+                    href="/perfil"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                   >
                     Perfil
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link
+                    href="/configuracoes"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200"
                   >
                     Configurações
-                  </a>
+                  </Link>
                   <button
                     onClick={onLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
@@ -150,13 +160,6 @@ export default function DashboardHeader({
         </div>
       </div>
 
-      {/* Overlay para fechar menu mobile */}
-      {isMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={onMenuToggle}
-        />
-      )}
     </header>
   );
 } 

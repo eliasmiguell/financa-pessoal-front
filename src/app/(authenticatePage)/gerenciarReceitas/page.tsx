@@ -25,7 +25,7 @@ export default function GerenciarReceitasPage() {
   const { data: receitas, isLoading, error } = useReceitas();
   const deletarReceita = useDeletarReceita();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja deletar esta receita?')) {
       try {
         await deletarReceita.mutateAsync(id);
@@ -89,7 +89,7 @@ export default function GerenciarReceitasPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className=" px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
         </div>
@@ -99,7 +99,7 @@ export default function GerenciarReceitasPage() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className=" px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <p className="text-red-500">Erro ao carregar receitas</p>
         </div>
@@ -108,15 +108,15 @@ export default function GerenciarReceitasPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="margin-6">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4"
+          className="mb-4 bg-gray-100 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
           Voltar
         </Button>
         <div className="flex justify-between items-center">
@@ -232,14 +232,14 @@ export default function GerenciarReceitasPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => router.push(`/editarReceita/${receita.id}`)}
+                      onClick={() => router.push(`/gerenciarReceitas/${receita.id}/editarReceita`)}
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDelete(receita.id)}
+                      onClick={() => handleDelete(receita.id.toString())}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4" />

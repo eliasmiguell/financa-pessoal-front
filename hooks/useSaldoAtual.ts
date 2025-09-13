@@ -5,7 +5,7 @@ export const useSaldoAtual = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['saldoAtual'],
     queryFn: async () => {
-      const response = await makeRequest.get('/api/adicionarRefeita'); 
+      const response = await makeRequest.get('/adicionarRefeita'); 
       return response.data.saldo;
     }
   });
@@ -17,7 +17,7 @@ export const UltimasTransacoes = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['ultimasTransacoes'],
     queryFn: async () => {
-      const response = await makeRequest.get('/api/adicionarRefeita/ultimas');
+      const response = await makeRequest.get('/adicionarRefeita/ultimas');
       return response.data
     }
   });

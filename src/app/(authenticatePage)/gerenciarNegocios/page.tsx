@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import useNegocios, { useDeletarNegocio, Negocio } from '../../../../hooks/useNegocios';
 import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { 
   ArrowLeft, 
   Plus, 
@@ -24,10 +24,10 @@ import {
 export default function GerenciarNegociosPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
-  const { data: negocios, isLoading, error } = useNegocios();
+  const { data: negocios, isLoading } = useNegocios();
   const deletarNegocio = useDeletarNegocio();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja deletar este negócio?')) {
       try {
         await deletarNegocio.mutateAsync(id);
@@ -50,12 +50,12 @@ export default function GerenciarNegociosPage() {
 
   const calculateTotalRevenue = (negocio: Negocio) => {
     if (!negocio.incomes) return 0;
-    return negocio.incomes.reduce((sum: number, income: any) => sum + (income.amount || 0), 0);
+    return (negocio.incomes as { amount?: number }[]).reduce((sum: number, income: { amount?: number }) => sum + (income.amount || 0), 0);
   };
 
   const calculateTotalExpenses = (negocio: Negocio) => {
     if (!negocio.expenses) return 0;
-    return negocio.expenses.reduce((sum: number, expense: any) => sum + (expense.amount || 0), 0);
+      return negocio.expenses.reduce((sum: number, expense: unknown) => sum + ((expense as { amount?: number }).amount || 0), 0);
   };
 
   const formatCurrency = (value: number) => {
@@ -67,7 +67,7 @@ export default function GerenciarNegociosPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
         </div>
@@ -75,26 +75,17 @@ export default function GerenciarNegociosPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center">
-          <p className="text-red-500">Erro ao carregar negócios</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="margin-6">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4"
+          className="mb-4 bg-gray-100 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
           Voltar
         </Button>
         <div className="flex justify-between items-center">
@@ -231,6 +222,13 @@ export default function GerenciarNegociosPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => router.push(`/detalhesNegocio/${negocio.id}`)}
+                      >
+                        Ver Detalhes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => router.push(`/editarNegocio/${negocio.id}`)}
                       >
                         <Edit className="w-4 h-4" />
                       </Button>

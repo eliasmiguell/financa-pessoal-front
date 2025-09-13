@@ -22,11 +22,20 @@ export interface NovaCategoria {
   budget: number;
 }
 
+export interface ApiError {
+  message: string;
+  response?: {
+    data?: unknown;
+    status?: number;
+    statusText?: string;
+  };
+}
+
 const useCategoriasCompletas = () => {
   const query = useQuery({
     queryKey: ['categorias-completas'],
     queryFn: async () => {
-      const response = await makeRequest.get('/api/personal-finance/categories');
+      const response = await makeRequest.get('/personal-finance/categories');
       return response.data as CategoriaCompleta[];
     },
     staleTime: 5 * 60 * 1000, // 5 minutos
@@ -48,7 +57,7 @@ export const useCriarCategoria = () => {
       queryClient.invalidateQueries({ queryKey: ['categorias-completas'] });
       queryClient.invalidateQueries({ queryKey: ['categorias-despesas'] });
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       console.error('Erro no hook useCriarCategoria:', error);
       console.error('Detalhes do erro:', {
         message: error.message,
@@ -67,7 +76,7 @@ export const useAtualizarCategoria = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async ({ id, ...dados }: { id: number } & Partial<NovaCategoria>) => {
-      const response = await makeRequest.put(`/api/personal-finance/categories/${id}`, dados);
+      const response = await makeRequest.put(`/personal-finance/categories/${id}`, dados);
       return response.data;
     },
     onSuccess: () => {
@@ -87,7 +96,7 @@ export const useDeletarCategoria = () => {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: async (id: number) => {
-      const response = await makeRequest.delete(`/api/personal-finance/categories/${id}`);
+      const response = await makeRequest.delete(`/personal-finance/categories/${id}`);
       return response.data;
     },
     onSuccess: () => {

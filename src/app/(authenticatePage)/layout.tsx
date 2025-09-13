@@ -31,6 +31,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   // Redirecionar para login se não autenticado
   useEffect(() => {
     if (!isValidating && (!isAuthenticated || !user)) {
@@ -67,13 +71,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <Sidebar
         isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
+        onClose={closeSidebar}
         activeTab={activeTab}
         onTabChange={handleTabChange}
       />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:ml-0">
+      <div className="flex-1 flex flex-col lg:ml-0 min-w-0">
         {/* Header */}
         <DashboardHeader
           user={user}
@@ -84,7 +88,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto">
-          {children}
+          <div className="min-h-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

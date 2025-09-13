@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import useDespesas from './useDespesas';
 import useReceitas from './useReceitas';
 import useMetas from './useMetas';
@@ -9,9 +8,9 @@ export interface DashboardData {
   balance: number;
   savings: number;
   emergencyFund: number;
-  recentExpenses: any[];
-  upcomingExpenses: any[];
-  goalsProgress: any[];
+  recentExpenses: unknown[];
+  upcomingExpenses: unknown[];
+  goalsProgress: unknown[];
 }
 
 const useDashboardData = () => {

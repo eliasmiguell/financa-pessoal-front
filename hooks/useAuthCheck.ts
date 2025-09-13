@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { makeRequest } from '../axios';
+import { ApiError } from './useUser';
 
 export const useAuthCheck = () => {
   const [isValidating, setIsValidating] = useState(true);
@@ -7,6 +8,11 @@ export const useAuthCheck = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
+      // Verificar se estamos no cliente antes de acessar localStorage
+      if (typeof window === 'undefined') {
+        return;
+      }
+
       const accessToken = localStorage.getItem("financa:accessToken");
       const refreshToken = localStorage.getItem("financa:refreshToken");
       
@@ -22,11 +28,11 @@ export const useAuthCheck = () => {
         await makeRequest.get('/personal-finance/categories');
         console.log('Token válido, usuário autenticado');
         setIsAuthenticated(true);
-      } catch (error: any) {
-        console.log('Token inválido ou expirado:', error.response?.status);
-        if (error.response?.status === 401) {
-          // O interceptor do axios já vai tentar renovar o token
-          // Se não conseguir, vai limpar os dados e redirecionar
+      } catch (error: unknown) {
+        const apiError = error as ApiError;
+        console.log('Token inválido ou expirado:', apiError.response);
+        if (apiError.response?.status === 401) {
+        
           setIsAuthenticated(false);
         }
       } finally {

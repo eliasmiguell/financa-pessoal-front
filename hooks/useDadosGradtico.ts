@@ -10,7 +10,7 @@ const useDataGraficos = () => {
     queryKey: ["graficos", user?.id],
     queryFn: async () =>
       makeRequest
-        .get("/api/graphic")
+        .get("/graphic")
         .then((res) => res.data)
         .catch((err) => {
           console.error(err);

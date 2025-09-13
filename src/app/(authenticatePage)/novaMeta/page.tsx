@@ -6,11 +6,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import useAdicionarMeta, { NovaMeta } from '../../../../hooks/useAdicionarMeta';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { useAdicionarMeta, NovaMeta } from '../../../../hooks/useMetas';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, Target, DollarSign, Calendar, FileText, AlertCircle } from 'lucide-react';
 
 const metaSchema = z.object({
@@ -64,15 +64,15 @@ export default function NovaMetaPage() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="margin-6">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4"
+          className="mb-4 bg-gray-100 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
           Voltar
         </Button>
         <h1 className="text-3xl font-bold text-gray-900">Nova Meta Financeira</h1>

@@ -6,11 +6,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import useAdicionarReceitaNova, { NovaReceita } from '../../../../hooks/useAdicionarReceitaNova';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { useAdicionarReceitaNova, NovaReceita } from '../../../../hooks/useReceitas';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, DollarSign, Calendar, FileText, TrendingUp } from 'lucide-react';
 
 const receitaSchema = z.object({
@@ -68,15 +68,15 @@ export default function NovaReceitaPage() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
       {/* Header */}
-      <div className="mb-6">
+      <div className="margin-6">
         <Button
           variant="ghost"
           onClick={() => router.back()}
-          className="mb-4"
+          className="mb-4 bg-gray-100 rounded-lg"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
           Voltar
         </Button>
         <h1 className="text-3xl font-bold text-gray-900">Nova Receita</h1>
@@ -142,12 +142,12 @@ export default function NovaReceitaPage() {
                   errors.type ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
-                <option value="salario">Salário</option>
-                <option value="freelance">Freelance</option>
-                <option value="venda">Venda</option>
-                <option value="investimento">Investimento</option>
-                <option value="bonus">Bônus</option>
-                <option value="outros">Outros</option>
+                <option value="SALARIO">Salário</option>
+                <option value="FREELANCE">Freelance</option>
+                <option value="VENDA">Venda</option>
+                <option value="INVESTIMENTO">Investimento</option>
+                <option value="BONUS">Bônus</option>
+                <option value="OUTRO">Outros</option>
               </select>
               {errors.type && (
                 <p className="text-sm text-red-500">{errors.type.message}</p>

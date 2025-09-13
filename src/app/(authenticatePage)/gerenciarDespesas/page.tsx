@@ -28,7 +28,7 @@ export default function GerenciarDespesasPage() {
   const handleDelete = async (id: number) => {
     if (window.confirm('Tem certeza que deseja deletar esta despesa?')) {
       try {
-        await deletarDespesa.mutateAsync(id);
+        await deletarDespesa.mutateAsync(id.toString());
         toast.success('Despesa deletada com sucesso!');
       } catch (error) {
         toast.error('Erro ao deletar despesa');
@@ -55,11 +55,11 @@ export default function GerenciarDespesasPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pago':
+      case 'PAGO':
         return 'bg-green-100 text-green-800';
-      case 'pendente':
+      case 'PENDENTE':
         return 'bg-yellow-100 text-yellow-800';
-      case 'vencido':
+      case 'ATRASADO':
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -68,7 +68,7 @@ export default function GerenciarDespesasPage() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className=" px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
         </div>
@@ -78,7 +78,7 @@ export default function GerenciarDespesasPage() {
 
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className=" px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <p className="text-red-500">Erro ao carregar despesas</p>
         </div>
@@ -87,17 +87,17 @@ export default function GerenciarDespesasPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-6">
-        <Button
-          variant="ghost"
-          onClick={() => router.back()}
-          className="mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar
-        </Button>
+    <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
+    {/* Header */}
+    <div className="margin-6">
+      <Button
+        variant="ghost"
+        onClick={() => router.back()}
+        className="mb-4 bg-gray-100 rounded-lg"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2 bg-gray-100" />
+        Voltar
+      </Button>
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Gerenciar Despesas</h1>
@@ -138,9 +138,9 @@ export default function GerenciarDespesasPage() {
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="todos">Todos os Status</option>
-              <option value="pendente">Pendente</option>
-              <option value="pago">Pago</option>
-              <option value="vencido">Vencido</option>
+              <option value="PENDENTE">Pendente</option>
+              <option value="PAGO">Pago</option>
+              <option value="ATRASADO">Atrasado</option>
             </select>
           </div>
         </CardContent>
@@ -215,14 +215,14 @@ export default function GerenciarDespesasPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => router.push(`/editarDespesa/${despesa.id}`)}
+                      onClick={() => router.push(`gerenciarDespesas/${despesa.id}/editarDespesa`)}
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDelete(despesa.id)}
+                      onClick={() => handleDelete(Number(despesa.id))}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -251,13 +251,13 @@ export default function GerenciarDespesasPage() {
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-green-600">
-                  {filteredDespesas.filter(d => d.status === 'pago').length}
+                  {filteredDespesas.filter(d => d.status === 'PAGO').length}
                 </p>
                 <p className="text-sm text-gray-500">Pagas</p>
               </div>
               <div className="text-center">
                 <p className="text-2xl font-bold text-yellow-600">
-                  {filteredDespesas.filter(d => d.status === 'pendente').length}
+                  {filteredDespesas.filter(d => d.status === 'PENDENTE').length}
                 </p>
                 <p className="text-sm text-gray-500">Pendentes</p>
               </div>

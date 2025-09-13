@@ -29,7 +29,7 @@ export default function DebugAuth() {
 
   const testAPI = async () => {
     try {
-      const response = await fetch('https://api-financa-pessoal.onrender.com/api/personal-finance/categories', {
+      const response = await fetch('http://localhost:8004/api/personal-finance/categories', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem("financa:accessToken")}`,
@@ -43,6 +43,42 @@ export default function DebugAuth() {
       alert(`Status: ${response.status}\nData: ${JSON.stringify(data, null, 2)}`);
     } catch (error) {
       console.error('Erro no teste:', error);
+      alert(`Erro: ${error}`);
+    }
+  };
+
+  const testLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8004/api/authlogin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: 'eliasperreiramiguel@gmail.com',
+          password: '123456'
+        })
+      });
+      
+      const data = await response.json();
+      console.log('Teste Login:', { status: response.status, data });
+      
+      if (response.status === 200 && data.accessToken) {
+        // Salvar tokens
+        localStorage.setItem("financa:accessToken", data.accessToken);
+        localStorage.setItem("financa:refreshToken", data.refreshToken);
+        localStorage.setItem("financa:user", JSON.stringify(data.user));
+        
+        alert(`Login bem-sucedido!\nUsuário: ${data.user.name}\nTokens salvos no localStorage`);
+        
+        // Recarregar a página para atualizar o estado
+        window.location.reload();
+      } else {
+        alert(`Erro no login: ${data.message || 'Erro desconhecido'}`);
+      }
+    } catch (error) {
+      console.error('Erro no login:', error);
       alert(`Erro: ${error}`);
     }
   };
@@ -63,12 +99,18 @@ export default function DebugAuth() {
         <p><strong>Tem Access Token:</strong> {authInfo.hasAccessToken ? 'Sim' : 'Não'}</p>
         <p><strong>Tem Refresh Token:</strong> {authInfo.hasRefreshToken ? 'Sim' : 'Não'}</p>
       </div>
-      <div className="mt-2 flex gap-2">
+      <div className="mt-2 flex gap-2 flex-wrap">
         <button 
           onClick={testAPI}
           className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
         >
           Testar API
+        </button>
+        <button 
+          onClick={testLogin}
+          className="bg-blue-500 text-white px-3 py-1 rounded text-sm"
+        >
+          Testar Login
         </button>
         <button 
           onClick={clearAuth}

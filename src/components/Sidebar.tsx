@@ -8,7 +8,8 @@ import {
   Settings,
   Plus,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  User
 } from "lucide-react";
 import Link from "next/link";
 
@@ -95,8 +96,9 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-[60] w-72 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:w-64
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        ${isOpen ? 'opacity-100' : 'opacity-0 lg:opacity-100'}
       `}>
         <div className="flex flex-col h-full">
           {/* Header do Sidebar */}
@@ -123,7 +125,8 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
             </div>
             <button
               onClick={onClose}
-              className="lg:hidden p-1 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+              className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Fechar menu"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -132,7 +135,7 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
           </div>
 
           {/* Menu Principal */}
-          <nav className="flex-1 px-4 py-6 space-y-2">
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -160,22 +163,32 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
                 <Link
                   key={item.id}
                   href={getHref(item.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onClose();
+                    // Navegar programaticamente
+                    window.location.href = getHref(item.id);
+                  }}
                   className={`
-                    w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group
+                    w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 group relative cursor-pointer
                     ${isActive 
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600 shadow-sm' 
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm'
                     }
                   `}
                 >
                   <Icon className={`
-                    mr-3 h-5 w-5 transition-colors duration-200
+                    mr-3 h-5 w-5 transition-colors duration-200 flex-shrink-0
                     ${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}
                   `} />
-                  <div className="text-left">
-                    <div className="font-medium">{item.name}</div>
-                    <div className="text-xs text-gray-500">{item.description}</div>
+                  <div className="text-left min-w-0 flex-1">
+                    <div className="font-medium truncate">{item.name}</div>
+                    <div className="text-xs text-gray-500 truncate">{item.description}</div>
                   </div>
+                  {isActive && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-600 rounded-full"></div>
+                  )}
                 </Link>
               );
             })}
@@ -194,13 +207,20 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
                   <Link
                     key={action.id}
                     href={action.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onClose();
+                      // Navegar programaticamente
+                      window.location.href = action.href;
+                    }}
                     className={`
-                      w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                      w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-sm cursor-pointer
                       ${action.color}
                     `}
                   >
-                    <Icon className="mr-2 h-4 w-4" />
-                    {action.name}
+                    <Icon className="mr-2 h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{action.name}</span>
                   </Link>
                 );
               })}
@@ -208,11 +228,33 @@ export default function Sidebar({ isOpen, onClose, activeTab }: SidebarProps) {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <button className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+          <div className="p-4 border-t border-gray-200 space-y-2">
+            <Link
+              href="/perfil"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+                window.location.href = '/perfil';
+              }}
+              className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
+            >
+              <User className="mr-2 h-4 w-4" />
+              Perfil
+            </Link>
+            <Link
+              href="/configuracoes"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+                window.location.href = '/configuracoes';
+              }}
+              className="w-full flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200 cursor-pointer"
+            >
               <Settings className="mr-2 h-4 w-4" />
               Configurações
-            </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -223,15 +223,15 @@ export default function ExpenseCategories() {
               <div className="mt-3">
                 <div className="flex justify-between text-xs text-gray-500 mb-1">
                   <span>Progresso</span>
-                  <span>{category.percentageUsed.toFixed(1)}%</span>
+                  <span>{(category.percentageUsed || 0).toFixed(1)}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all duration-300 ${
-                      category.percentageUsed > 100 ? 'bg-red-500' : 
-                      category.percentageUsed > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                      (category.percentageUsed || 0) > 100 ? 'bg-red-500' : 
+                      (category.percentageUsed || 0) > 80 ? 'bg-yellow-500' : 'bg-green-500'
                     }`}
-                    style={{ width: `${Math.min(category.percentageUsed, 100)}%` }}
+                    style={{ width: `${Math.min(category.percentageUsed || 0, 100)}%` }}
                   ></div>
                 </div>
               </div>
@@ -425,49 +425,7 @@ export default function ExpenseCategories() {
         </div>
       )}
 
-      {/* Modal de Teste Simples - Portal */}
-      {showAddModal && mounted && createPortal(
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-          style={{ zIndex: 99999 }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowAddModal(false);
-            }
-          }}
-        >
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Modal de Teste</h2>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-gray-600 mb-4">Se você está vendo isso, o modal está funcionando!</p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Fechar
-              </button>
-              <button
-                onClick={() => {
-                  console.log('Testando criação de categoria...');
-                  // Aqui você pode testar a criação
-                }}
-                className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Testar API
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+       
     </div>
   );
 } 

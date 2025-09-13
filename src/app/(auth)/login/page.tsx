@@ -21,15 +21,31 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await makeRequest.post("/auth/login", {
+      const response = await makeRequest.post("/authlogin", {
         email,
         password,
       });
 
       if (response.data.user) {
+        console.log('Login bem-sucedido:', response.data);
+        console.log('Access Token:', response.data.accessToken ? 'Presente' : 'Ausente');
+        console.log('Refresh Token:', response.data.refreshToken ? 'Presente' : 'Ausente');
+        
+        // Salvar tokens no localStorage
+        if (response.data.accessToken) {
+          localStorage.setItem("financa:accessToken", response.data.accessToken);
+        }
+        if (response.data.refreshToken) {
+          localStorage.setItem("financa:refreshToken", response.data.refreshToken);
+        }
+        
         setUser(response.data.user);
         toast.success("Login realizado com sucesso!");
-        router.push("/main");
+        
+        // Aguardar um pouco antes de redirecionar
+        setTimeout(() => {
+          router.push("/main");
+        }, 1000);
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Erro ao fazer login";
