@@ -1,6 +1,6 @@
-import useDespesas from './useDespesas';
-import useReceitas from './useReceitas';
-import useMetas from './useMetas';
+import useDespesas, { Despesa } from './useDespesas';
+import useReceitas, { Receita } from './useReceitas';
+import useMetas, { Meta } from './useMetas';
 
 export interface DashboardData {
   totalIncome: number;
@@ -8,9 +8,9 @@ export interface DashboardData {
   balance: number;
   savings: number;
   emergencyFund: number;
-  recentExpenses: unknown[];
-  upcomingExpenses: unknown[];
-  goalsProgress: unknown[];
+  recentExpenses: Despesa[];
+  upcomingExpenses: Despesa[];
+  goalsProgress: (Meta & { progress: number })[];
 }
 
 const useDashboardData = () => {

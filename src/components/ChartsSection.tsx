@@ -6,6 +6,12 @@ import useDataGraficos from "../../hooks/useDadosGradtico";
 import useDashboardData from "../../hooks/useDashboardData";
 import { TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react";
 
+interface CategoryDataItem {
+  name: string;
+  amount: number;
+  color?: string;
+}
+
 export default function ChartsSection() {
   const { data: graphicData, isLoading: graphicLoading } = useDataGraficos();
   const { data: dashboardData, isLoading: dashboardLoading } = useDashboardData();
@@ -62,7 +68,7 @@ export default function ChartsSection() {
                   fill="#8884d8"
                   dataKey="amount"
                 >
-                  {categoryData.map((entry, index) => (
+                  {categoryData.map((entry: CategoryDataItem, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color || `hsl(${index * 60}, 70%, 50%)`} />
                   ))}
                 </Pie>

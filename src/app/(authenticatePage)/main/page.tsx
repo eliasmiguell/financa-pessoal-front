@@ -14,11 +14,15 @@ import useNegocios from "../../../../hooks/useNegocios";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Calendar, DollarSign, AlertCircle, CreditCard, Clock } from "lucide-react";
 import { makeRequest } from "../../../../axios";
+import { BusinessPayment } from "../../../../hooks/useBusinessPayments";
 
+interface PaymentWithBusiness extends BusinessPayment {
+  businessName: string;
+}
 
 export default function MainDashboard() {
   const [activeTab] = useState("dashboard");
-  const [allPendingPayments, setAllPendingPayments] = useState<any[]>([]);
+  const [allPendingPayments, setAllPendingPayments] = useState<PaymentWithBusiness[]>([]);
   const { data: dashboardData, isLoading } = useDashboardData();
   const { data: negocios } = useNegocios();
   
@@ -34,7 +38,7 @@ export default function MainDashboard() {
         const paymentPromises = negocios.map(async (negocio) => {
           try {
             const response = await makeRequest.get(`/business/businesses/${negocio.id}/payments?status=PENDING`);
-            return response.data.map((p: any) => ({ ...p, businessName: negocio.name }));
+            return response.data.map((p: BusinessPayment) => ({ ...p, businessName: negocio.name }));
           } catch (error) {
             console.error(`Erro ao buscar pagamentos do negócio ${negocio.name}:`, error);
             return [];

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'react-toastify';
 import { useAdicionarDespesa, NovaDespesa } from '../../../../hooks/useDespesas';
 import { useCategoriasDespesas } from '../../../../hooks/useDespesas';
@@ -14,24 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText } from 'lucide-react';
 import { Categoria } from '../../../../hooks/useDespesas';
-
-export const despesaSchema = z.object({
-  description: z.string().min(1, 'Descrição é obrigatória'),
-  amount: z.string().min(1, 'Valor é obrigatório').refine((val) => !isNaN(Number(val)) && Number(val) > 0, 'Valor deve ser um número positivo'),
-  type: z.enum(['FIXA', 'IMPREVISTA', 'PENDENTE'], {
-    required_error: 'Tipo de despesa é obrigatório',
-  }),
-  status: z.enum(['PAGO', 'PENDENTE', 'ATRASADO'], {
-    required_error: 'Status é obrigatório',
-  }),
-  categoryId: z.string().min(1, 'Categoria é obrigatória'),
-  dueDate: z.string().optional(),
-  paidDate: z.string().optional(),
-  isRecurring: z.boolean().optional(),
-  recurringInterval: z.string().optional(),
-});
-
-export type DespesaFormData = z.infer<typeof despesaSchema>;
+import { despesaSchema, DespesaFormData } from '@/lib/schemas';
 
 export default function NovaDespesaPage() {
   const router = useRouter();

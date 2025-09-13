@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'react-toastify';
 import { useAdicionarReceitaNova, NovaReceita } from '../../../../hooks/useReceitas';
 import { Button } from '@/components/ui/button';
@@ -12,17 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, DollarSign, Calendar, FileText, TrendingUp } from 'lucide-react';
-
-const receitaSchema = z.object({
-  description: z.string().min(1, 'Descrição é obrigatória'),
-  amount: z.string().min(1, 'Valor é obrigatório').refine((val) => !isNaN(Number(val)) && Number(val) > 0, 'Valor deve ser um número positivo'),
-  type: z.string().min(1, 'Tipo é obrigatório'),
-  receivedDate: z.string().optional(),
-  isRecurring: z.boolean().optional(),
-  recurringInterval: z.string().optional(),
-});
-
-type ReceitaFormData = z.infer<typeof receitaSchema>;
+import { receitaSchema, ReceitaFormData } from '@/lib/schemas';
 
 export default function NovaReceitaPage() {
   const router = useRouter();

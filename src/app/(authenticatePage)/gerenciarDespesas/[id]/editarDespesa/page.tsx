@@ -3,17 +3,14 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { toast } from 'react-toastify';
 import {  useAtualizarDespesa, useDespesasById, useCategoriasDespesas } from '../../../../../../hooks/useDespesas';
-
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, DollarSign, Calendar, Tag, FileText } from 'lucide-react';
-import { DespesaFormData, despesaSchema } from '@/app/(authenticatePage)/novaDespesa/page';
+import { DespesaFormData, despesaSchema } from '@/lib/schemas';
 
 
 
