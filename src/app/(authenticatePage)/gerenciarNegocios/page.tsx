@@ -18,7 +18,8 @@ import {
   Search,
   Users,
   Package,
-  Wrench
+  Wrench,
+  CreditCard
 } from 'lucide-react';
 
 export default function GerenciarNegociosPage() {
@@ -32,7 +33,7 @@ export default function GerenciarNegociosPage() {
       try {
         await deletarNegocio.mutateAsync(id);
         toast.success('Negócio deletado com sucesso!');
-      } catch (error) {
+      } catch {
         toast.error('Erro ao deletar negócio');
       }
     }
@@ -224,6 +225,14 @@ export default function GerenciarNegociosPage() {
                         onClick={() => router.push(`/detalhesNegocio/${negocio.id}`)}
                       >
                         Ver Detalhes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => router.push(`/gerenciarPagamentos/${negocio.id}`)}
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      >
+                        <CreditCard className="w-4 h-4" />
                       </Button>
                       <Button
                         variant="outline"

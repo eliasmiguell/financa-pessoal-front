@@ -17,7 +17,8 @@ import {
   Users,
   TrendingUp,
   TrendingDown,
-  Plus
+  Plus,
+  CreditCard
 } from 'lucide-react';
 
 export default function DetalhesNegocioPage() {
@@ -353,6 +354,10 @@ export default function DetalhesNegocioPage() {
             <Button onClick={() => router.push(`/gerenciarDespesasNegocio/${negocio.id}`)}>
               <TrendingDown className="w-4 h-4 mr-2" />
               Gerenciar Despesas
+            </Button>
+            <Button onClick={() => router.push(`/gerenciarPagamentos/${negocio.id}`)}>
+              <CreditCard className="w-4 h-4 mr-2" />
+              Gerenciar Pagamentos
             </Button>
           </div>
 

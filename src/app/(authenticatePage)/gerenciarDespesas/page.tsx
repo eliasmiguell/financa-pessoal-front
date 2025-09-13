@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import useDespesas, { useDeletarDespesa, Despesa } from '../../../../hooks/useDespesas';
+import useDespesas, { useDeletarDespesa } from '../../../../hooks/useDespesas';
 import { Button } from '../../../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { 
   ArrowLeft, 
   Plus, 
@@ -22,15 +22,15 @@ export default function GerenciarDespesasPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
-  const { data: despesas, isLoading, error } = useDespesas();
+  const { data: despesas, isLoading } = useDespesas();
   const deletarDespesa = useDeletarDespesa();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja deletar esta despesa?')) {
       try {
-        await deletarDespesa.mutateAsync(id.toString());
+        await deletarDespesa.mutateAsync(id);
         toast.success('Despesa deletada com sucesso!');
-      } catch (error) {
+      } catch {
         toast.error('Erro ao deletar despesa');
       }
     }
@@ -76,15 +76,6 @@ export default function GerenciarDespesasPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className=" px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center">
-          <p className="text-red-500">Erro ao carregar despesas</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-6 margin-6 bg-white border-gray-200 border-2 rounded-lg">
@@ -222,7 +213,7 @@ export default function GerenciarDespesasPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDelete(Number(despesa.id))}
+                      onClick={() => handleDelete(despesa.id)}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4" />

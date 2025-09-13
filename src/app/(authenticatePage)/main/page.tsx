@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FinancialSummary from "../../../components/FinancialSummary";
 import ExpenseCategories from "../../../components/ExpenseCategories";
 import ExpenseList from "../../../components/ExpenseList";
@@ -10,13 +10,48 @@ import SavingsSuggestions from "../../../components/SavingsSuggestions";
 import BusinessSection from "../../../components/BusinessSection";
 import ChartsSection from "../../../components/ChartsSection";
 import useDashboardData from "../../../../hooks/useDashboardData";
+import useNegocios from "../../../../hooks/useNegocios";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
-import { Calendar, DollarSign, AlertCircle } from "lucide-react";
+import { Calendar, DollarSign, AlertCircle, CreditCard, Clock } from "lucide-react";
+import { makeRequest } from "../../../../axios";
 
 
 export default function MainDashboard() {
   const [activeTab] = useState("dashboard");
+  const [allPendingPayments, setAllPendingPayments] = useState<any[]>([]);
   const { data: dashboardData, isLoading } = useDashboardData();
+  const { data: negocios } = useNegocios();
+  
+  // Buscar pagamentos pendentes de todos os negócios
+  useEffect(() => {
+    const fetchPendingPayments = async () => {
+      if (!negocios || negocios.length === 0) {
+        setAllPendingPayments([]);
+        return;
+      }
+
+      try {
+        const paymentPromises = negocios.map(async (negocio) => {
+          try {
+            const response = await makeRequest.get(`/business/businesses/${negocio.id}/payments?status=PENDING`);
+            return response.data.map((p: any) => ({ ...p, businessName: negocio.name }));
+          } catch (error) {
+            console.error(`Erro ao buscar pagamentos do negócio ${negocio.name}:`, error);
+            return [];
+          }
+        });
+
+        const allPayments = await Promise.all(paymentPromises);
+        const flatPayments = allPayments.flat();
+        setAllPendingPayments(flatPayments);
+      } catch (error) {
+        console.error('Erro ao buscar pagamentos pendentes:', error);
+        setAllPendingPayments([]);
+      }
+    };
+
+    fetchPendingPayments();
+  }, [negocios]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -192,6 +227,60 @@ export default function MainDashboard() {
                             </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Pagamentos Pendentes */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CreditCard className="w-5 h-5" />
+                      Pagamentos Pendentes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {allPendingPayments.length === 0 ? (
+                      <div className="text-center py-8">
+                        <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Nenhum pagamento pendente</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {allPendingPayments.slice(0, 5).map((pagamento) => (
+                          <div key={pagamento.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div className="flex items-center gap-3">
+                              <Clock className="w-5 h-5 text-yellow-600" />
+                              <div>
+                                <p className="font-medium text-gray-900">{pagamento.description}</p>
+                                <p className="text-sm text-gray-600">
+                                  {pagamento.client.name} • {pagamento.businessName}
+                                </p>
+                                {pagamento.dueDate && (
+                                  <p className="text-xs text-yellow-600">
+                                    Vence: {formatDate(pagamento.dueDate)}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold text-gray-900">
+                                {formatCurrency(pagamento.amount)}
+                              </p>
+                              <p className="text-xs text-yellow-600 font-medium">
+                                Pendente
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                        {allPendingPayments.length > 5 && (
+                          <div className="text-center pt-2">
+                            <p className="text-sm text-gray-500">
+                              E mais {allPendingPayments.length - 5} pagamentos pendentes
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </CardContent>
